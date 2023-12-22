@@ -20,30 +20,34 @@ function decide_year(params) {
   }
 }
 
-//月と年の表示
 let target_month = decide_month(argv);
 let target_year = decide_year(argv);
-console.log(target_month + "月 " + target_year);
+console.log("       " + target_month + "月 " + target_year);
 
-let first_day = new Date(target_year, target_month - 1);
-let last_day = new Date(target_year, target_month, 0);
+let first_date = new Date(target_year, target_month - 1);
+let last_date = new Date(target_year, target_month, 0);
 
-//曜日の表示
 const days_of_week = ["日", "月", "火", "水", "木", "金", "土"];
 console.log(days_of_week.join(" "));
 
 let days = [];
-for (let day = first_day.getDate(); day <= last_day.getDate(); day++) {
-  days.push(day);
-}
-let week1 = days.slice(0,7);
-let week2 = days.slice(7,14);
-let week3 = days.slice(14,21);
-let week4 = days.slice(21,28);
-let week5 = days.slice(28);
 
-console.log(week1.join(' '));
-console.log(week2.join(' '));
-console.log(week3.join(' '));
-console.log(week4.join(' '));
-console.log(week5.join(' '));
+for (let day = first_date.getDate(); day <= last_date.getDate(); day++) {
+  days.push(day.toString().padStart(2));
+}
+
+let first_wday = first_date.getDay();
+
+let week1 = days.slice(0, 7 - first_wday);
+let week2 = days.slice(7 - first_wday, 7 * 2 - first_wday);
+let week3 = days.slice(7 * 2 - first_wday, 7 * 3 - first_wday);
+let week4 = days.slice(7 * 3 - first_wday, 7 * 4 - first_wday);
+let week5 = days.slice(7 * 4 - first_wday, 7 * 5 - first_wday);
+let week6 = days.slice(7 * 5 - first_wday);
+
+console.log(week1.join(" ").padStart(20));
+console.log(week2.join(" "));
+console.log(week3.join(" "));
+console.log(week4.join(" "));
+console.log(week5.join(" "));
+console.log(week6.join(" "));
