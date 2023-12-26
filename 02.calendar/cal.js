@@ -2,9 +2,7 @@ import { default as minimist } from "minimist";
 
 let argv = minimist(process.argv.slice(2));
 
-let today = new Date();
-
-function decide_month(params) {
+function decideMonth(params) {
   if (Object.prototype.hasOwnProperty.call(params, "m")) {
     return params.m;
   } else {
@@ -12,7 +10,7 @@ function decide_month(params) {
   }
 }
 
-function decide_year(params) {
+function decideYear(params) {
   if (Object.prototype.hasOwnProperty.call(params, "y")) {
     return params.y;
   } else {
@@ -20,34 +18,40 @@ function decide_year(params) {
   }
 }
 
-let target_month = decide_month(argv);
-let target_year = decide_year(argv);
-console.log("       " + target_month + "月 " + target_year);
+let today = new Date();
+let targetMonth = decideMonth(argv);
+let targetYear = decideYear(argv);
+console.log("       " + targetMonth + "月 " + targetYear);
 
-let first_date = new Date(target_year, target_month - 1);
-let last_date = new Date(target_year, target_month, 0);
+const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+console.log(daysOfWeek.join(" "));
 
-const days_of_week = ["日", "月", "火", "水", "木", "金", "土"];
-console.log(days_of_week.join(" "));
+let firstDate = new Date(targetYear, targetMonth - 1);
+let lastDate = new Date(targetYear, targetMonth, 0);
 
 let days = [];
 
-for (let day = first_date.getDate(); day <= last_date.getDate(); day++) {
+for (let day = firstDate.getDate(); day <= lastDate.getDate(); day++) {
   days.push(day.toString().padStart(2));
 }
 
-let first_wday = first_date.getDay();
+let firstWday = firstDate.getDay();
+let weeks = [];
 
-let week1 = days.slice(0, 7 - first_wday);
-let week2 = days.slice(7 - first_wday, 7 * 2 - first_wday);
-let week3 = days.slice(7 * 2 - first_wday, 7 * 3 - first_wday);
-let week4 = days.slice(7 * 3 - first_wday, 7 * 4 - first_wday);
-let week5 = days.slice(7 * 4 - first_wday, 7 * 5 - first_wday);
-let week6 = days.slice(7 * 5 - first_wday);
+for (let weekIndex = 1; weekIndex < 7; weekIndex++) {
+  if (weekIndex === 1) {
+    weeks.push(days.slice(0, 7 * weekIndex - firstWday));
+  } else {
+    weeks.push(
+      days.slice(7 * (weekIndex - 1) - firstWday, 7 * weekIndex - firstWday),
+    );
+  }
+}
 
-console.log(week1.join(" ").padStart(20));
-console.log(week2.join(" "));
-console.log(week3.join(" "));
-console.log(week4.join(" "));
-console.log(week5.join(" "));
-console.log(week6.join(" "));
+for (let week of weeks) {
+  if (week === weeks[0]) {
+    console.log(week.join(" ").padStart(20));
+  } else {
+    console.log(week.join(" "));
+  }
+}
