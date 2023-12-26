@@ -28,26 +28,29 @@ console.log(daysOfWeek.join(" "));
 let firstDate = new Date(targetYear, targetMonth - 1);
 let lastDate = new Date(targetYear, targetMonth, 0);
 
+let days = [];
+
+for (let day = firstDate.getDate(); day <= lastDate.getDate(); day++) {
+  days.push(day.toString().padStart(2));
+}
+
 let firstWday = firstDate.getDay();
-for (let wdayIndex = 0; wdayIndex < firstWday * 3 - 1; wdayIndex++) {
-  process.stdout.write(" ");
-}
+let weeks = [];
 
-function format(day, targetDate) {
-  if (targetDate.getDay() === 0) {
-    return day.toString().padStart(2);
+for (let weekIndex = 1; weekIndex <= 6; weekIndex++) {
+  if (weekIndex === 1) {
+    weeks.push(days.slice(0, 7 * weekIndex - firstWday));
   } else {
-    return day.toString().padStart(3);
+    weeks.push(
+      days.slice(7 * (weekIndex - 1) - firstWday, 7 * weekIndex - firstWday),
+    );
   }
 }
 
-for (let day = 1; day <= lastDate.getDate(); day++) {
-  let targetDate = new Date(targetYear, targetMonth - 1, day);
-  let formatDay = format(day, targetDate);
-  if (targetDate.getDay() === 6) {
-    console.log(formatDay);
+for (let week of weeks) {
+  if (week === weeks[0]) {
+    console.log(week.join(" ").padStart(20));
   } else {
-    process.stdout.write(formatDay);
+    console.log(week.join(" "));
   }
 }
-console.log();
