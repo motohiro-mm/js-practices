@@ -20,7 +20,7 @@ let argv = minimist(process.argv.slice(2));
 let today = new Date();
 let targetMonth = decideMonth(argv);
 let targetYear = decideYear(argv);
-console.log("       " + targetMonth + "月 " + targetYear);
+console.log(`       ${targetMonth}月${targetYear}`);
 
 const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
 console.log(daysOfWeek.join(" "));
