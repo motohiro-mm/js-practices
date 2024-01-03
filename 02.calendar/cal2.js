@@ -1,4 +1,4 @@
-import { default as minimist } from "minimist";
+import minimist from "minimist";
 
 function decideMonth(argv) {
   if (Object.prototype.hasOwnProperty.call(argv, "m")) {
