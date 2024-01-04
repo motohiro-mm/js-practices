@@ -7,15 +7,17 @@ db.run(
       if (err) console.log(`1つ目登録時エラー: ${err.message}`);
       db.run("insert into books(title) values(?)", "プログラマー脳", (err) => {
         if (err) console.log(`2つ目登録時エラー: ${err.message}`);
-        db.each("select * from books", (err, row) => {
+        db.all("select * from books", (err, rows) => {
           if (err) {
             console.log(`取得時エラー: ${err.message}`);
           } else {
-            console.log(`${row.id} : ${row.title}`);
+            rows.forEach((row) => {
+              console.log(`${row.id} : ${row.title}`);
+            });
           }
+          db.close();
         });
       });
     });
   },
 );
-db.close();
