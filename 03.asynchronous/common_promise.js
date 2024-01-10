@@ -21,9 +21,9 @@ export function addBook(title) {
   });
 }
 
-export function getBooks() {
+export function getBooks(sql) {
   return new Promise((resolve, reject) => {
-    db.all("select * from books", (err, rows) => {
+    db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -34,3 +34,6 @@ export function getBooks() {
     });
   });
 }
+
+export const correctSql = "SELECT * FROM books";
+export const wrongSql = "SELECT * FROM book";
