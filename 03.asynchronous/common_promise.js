@@ -24,13 +24,13 @@ export function addBook(title) {
 export function getBooks() {
   return new Promise((resolve, reject) => {
     db.all("select * from books", (err, rows) => {
-      err ? reject(err) : resolve(rows);
+      if (err) {
+        reject(err);
+      } else {
+        rows.forEach((row) => {
+          console.log(`${row.id} : ${row.title}`);
+        });
+      }
     });
-  });
-}
-
-export function output(rows) {
-  rows.forEach((row) => {
-    console.log(`${row.id} : ${row.title}`);
   });
 }
