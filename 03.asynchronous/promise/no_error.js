@@ -8,6 +8,5 @@ import {
 
 createBooksTable()
   .then(() => addBook("リーダブルコード"))
-  .then(() => addBook("プログラマー脳"))
   .then(() => getBooks(correctSql))
   .then(() => db.close());

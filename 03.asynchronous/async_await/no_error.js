@@ -9,7 +9,6 @@ import {
 (async () => {
   await createBooksTable();
   await addBook("リーダブルコード");
-  await addBook("プログラマー脳");
   await getBooks(correctSql);
   db.close();
 })();

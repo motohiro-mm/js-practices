@@ -14,7 +14,7 @@ export const createBooksTable = () =>
 
 export const addBook = (title) =>
   new Promise((resolve, reject) => {
-    db.run("insert into books(title) values(?)", title, (err) => {
+    db.run("INSERT INTO books(title) VALUES(?)", title, (err) => {
       err ? reject(err) : resolve();
     });
   });

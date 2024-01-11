@@ -11,12 +11,7 @@ import {
   try {
     await addBook();
   } catch (err) {
-    console.log(`1つ目登録時エラー: ${err}`);
-  }
-  try {
-    await addBook();
-  } catch (err) {
-    console.log(`2つ目登録時エラー: ${err}`);
+    console.log(`登録時エラー: ${err}`);
   }
   try {
     await getBooks(wrongSql);
