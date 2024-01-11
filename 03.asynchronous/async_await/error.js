@@ -3,8 +3,8 @@ import {
   createBooksTable,
   addBook,
   getBooks,
-  wrongSql
-} from "./common_async_await.js";
+  wrongSql,
+} from "../common_promise.js";
 
 (async () => {
   await createBooksTable();
@@ -20,8 +20,8 @@ import {
   }
   try {
     await getBooks(wrongSql);
-    db.close();
   } catch (err) {
     console.log(`取得時エラー：${err}`);
   }
+  db.close();
 })();

@@ -2,8 +2,8 @@ import sqlite3 from "sqlite3";
 
 export const db = new sqlite3.Database(":memory:");
 
-export function createBooksTable() {
-  return new Promise((resolve) => {
+export const createBooksTable = () =>
+  new Promise((resolve) => {
     db.run(
       "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
       () => {
@@ -11,18 +11,16 @@ export function createBooksTable() {
       },
     );
   });
-}
 
-export function addBook(title) {
-  return new Promise((resolve, reject) => {
+export const addBook = (title) =>
+  new Promise((resolve, reject) => {
     db.run("insert into books(title) values(?)", title, (err) => {
       err ? reject(err) : resolve();
     });
   });
-}
 
-export function getBooks(sql) {
-  return new Promise((resolve, reject) => {
+export const getBooks = (sql) =>
+  new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -33,7 +31,6 @@ export function getBooks(sql) {
       }
     });
   });
-}
 
 export const correctSql = "SELECT * FROM books";
 export const wrongSql = "SELECT * FROM book";

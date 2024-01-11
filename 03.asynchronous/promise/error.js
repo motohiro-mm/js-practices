@@ -3,13 +3,13 @@ import {
   createBooksTable,
   addBook,
   getBooks,
-  wrongSql
-} from "./common_promise.js";
+  wrongSql,
+} from "../common_promise.js";
 
 createBooksTable()
   .then(() => addBook())
   .catch((err) => console.log(`1つ目登録時エラー: ${err}`))
-  .then(() => addBook("リーダブルコード"))
+  .then(() => addBook())
   .catch((err) => console.log(`2つ目登録時エラー: ${err}`))
   .then(() => getBooks(wrongSql))
   .catch((err) => console.log(`取得時エラー：${err}`))

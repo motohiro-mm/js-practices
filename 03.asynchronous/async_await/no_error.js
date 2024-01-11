@@ -3,8 +3,8 @@ import {
   createBooksTable,
   addBook,
   getBooks,
-  correctSql
-} from "./common_async_await.js";
+  correctSql,
+} from "../common_promise.js";
 
 (async () => {
   await createBooksTable();
