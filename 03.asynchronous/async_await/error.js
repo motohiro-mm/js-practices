@@ -9,7 +9,8 @@ import {
 (async () => {
   await createBooksTable();
   try {
-    await addBook();
+    const id = await addBook();
+    console.log(id);
   } catch (err) {
     console.error(err);
   }

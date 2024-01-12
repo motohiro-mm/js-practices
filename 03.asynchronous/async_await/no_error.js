@@ -8,7 +8,8 @@ import {
 
 (async () => {
   await createBooksTable();
-  await addBook("リーダブルコード");
+  const id = await addBook("リーダブルコード");
+  console.log(id);
   await getBooks(correctSql);
   db.close();
 })();

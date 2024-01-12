@@ -14,8 +14,8 @@ export const createBooksTable = () =>
 
 export const addBook = (title) =>
   new Promise((resolve, reject) => {
-    db.run("INSERT INTO books(title) VALUES(?)", title, (err) => {
-      err ? reject(err) : resolve();
+    db.run("INSERT INTO books(title) VALUES(?)", title, function (err) {
+      err ? reject(err) : resolve(this.lastID);
     });
   });
 

@@ -8,5 +8,6 @@ import {
 
 createBooksTable()
   .then(() => addBook("リーダブルコード"))
+  .then((id) => console.log(id))
   .then(() => getBooks(correctSql))
   .then(() => db.close());
