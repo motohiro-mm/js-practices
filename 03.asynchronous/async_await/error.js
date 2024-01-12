@@ -3,6 +3,7 @@ import {
   createBooksTable,
   addBook,
   getBooks,
+  dropTable,
   wrongSql,
 } from "../common_promise.js";
 
@@ -15,9 +16,13 @@ import {
     console.error(err);
   }
   try {
-    await getBooks(wrongSql);
+    const rows = await getBooks(wrongSql);
+    rows.forEach((row) => {
+      console.log(`${row.id} : ${row.title}`);
+    });
   } catch (err) {
     console.error(err);
   }
+  await dropTable();
   db.close();
 })();

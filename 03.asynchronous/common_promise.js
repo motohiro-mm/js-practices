@@ -22,13 +22,14 @@ export const addBook = (title) =>
 export const getBooks = (sql) =>
   new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        rows.forEach((row) => {
-          console.log(`${row.id} : ${row.title}`);
-        });
-      }
+      err ? reject(err) : resolve(rows);
+    });
+  });
+
+export const dropTable = () =>
+  new Promise((resolve) => {
+    db.run("DROP TABLE books", () => {
+      resolve();
     });
   });
 

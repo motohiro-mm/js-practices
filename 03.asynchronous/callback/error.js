@@ -13,7 +13,9 @@ db.run(
             console.log(`${row.id} : ${row.title}`);
           });
         }
-        db.close();
+        db.run("DROP TABLE books", () => {
+          db.close();
+        });
       });
     });
   },
