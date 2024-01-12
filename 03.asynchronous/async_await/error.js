@@ -11,12 +11,12 @@ import {
   try {
     await addBook();
   } catch (err) {
-    console.log(`登録時エラー: ${err}`);
+    console.error(err);
   }
   try {
     await getBooks(wrongSql);
   } catch (err) {
-    console.log(`取得時エラー：${err}`);
+    console.error(err);
   }
   db.close();
 })();

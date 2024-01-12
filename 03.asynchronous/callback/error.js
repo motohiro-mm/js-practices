@@ -4,10 +4,10 @@ db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run("INSERT INTO books(title) VALUES(?)", (err) => {
-      if (err) console.log(`登録時エラー: ${err.message}`);
+      if (err) console.error(err);
       db.all("SELECT * FROM book", (err, rows) => {
         if (err) {
-          console.log(`取得時エラー: ${err.message}`);
+          console.error(err);
         } else {
           rows.forEach((row) => {
             console.log(`${row.id} : ${row.title}`);

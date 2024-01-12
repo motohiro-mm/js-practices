@@ -8,7 +8,7 @@ import {
 
 createBooksTable()
   .then(() => addBook())
-  .catch((err) => console.log(`登録時エラー: ${err}`))
+  .catch((err) => console.error(err))
   .then(() => getBooks(wrongSql))
-  .catch((err) => console.log(`取得時エラー：${err}`))
+  .catch((err) => console.error(err))
   .then(() => db.close());
