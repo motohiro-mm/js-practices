@@ -13,7 +13,11 @@ import {
     const id = await addBook();
     console.log(id);
   } catch (err) {
-    console.error(err);
+    if (err.code === "SQLITE_CONSTRAINT") {
+      console.error(err);
+    } else {
+      throw err;
+    }
   }
   try {
     const rows = await getBooks(wrongSql);
@@ -21,7 +25,11 @@ import {
       console.log(`${row.id} : ${row.title}`);
     });
   } catch (err) {
-    console.error(err);
+    if (err.code === "SQLITE_ERROR") {
+      console.error(err);
+    } else {
+      throw err;
+    }
   }
   await dropTable();
   db.close();
