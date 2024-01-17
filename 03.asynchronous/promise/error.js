@@ -4,7 +4,7 @@ promiseDBRun(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
 )
-  .then(() => promiseDBRun("INSERT INTO books(title) VALUES(?)"))
+  .then(() => promiseDBRun("INSERT INTO books (title) VALUES (?)"))
   .then((id) => console.log(id))
   .catch((err) => console.error(err))
   .then(() => promiseDBAll("SELECT * FROM book"))

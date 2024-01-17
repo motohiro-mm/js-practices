@@ -6,7 +6,7 @@ import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
     [],
   );
   const id = await promiseDBRun(
-    "INSERT INTO books(title) VALUES(?)",
+    "INSERT INTO books (title) VALUES (?)",
     "リーダブルコード",
   );
   console.log(id);

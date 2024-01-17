@@ -5,7 +5,7 @@ promiseDBRun(
   [],
 )
   .then(() =>
-    promiseDBRun("INSERT INTO books(title) VALUES(?)", "リーダブルコード"),
+    promiseDBRun("INSERT INTO books (title) VALUES (?)", "リーダブルコード"),
   )
   .then((id) => console.log(id))
   .then(() => promiseDBAll("SELECT * FROM books"))
