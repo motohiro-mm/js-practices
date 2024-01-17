@@ -11,12 +11,14 @@ promiseDBRun(
       "リーダブルコード",
     ),
   )
-  .then((id) => console.log(id))
-  .then(() => promiseDBAll(db, "SELECT * FROM books"))
-  .then((rows) =>
+  .then((id) => {
+    console.log(id);
+    return promiseDBAll(db, "SELECT * FROM books");
+  })
+  .then((rows) => {
     rows.forEach((row) => {
       console.log(`${row.id} : ${row.title}`);
-    }),
-  )
-  .then(() => promiseDBRun(db, "DROP TABLE books"))
+    });
+    return promiseDBRun(db, "DROP TABLE books");
+  })
   .then(() => db.close());

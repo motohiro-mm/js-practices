@@ -5,14 +5,20 @@ promiseDBRun(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
 )
   .then(() => promiseDBRun(db, "INSERT INTO books (title) VALUES (?)", null))
-  .then((id) => console.log(id))
   .catch((err) => console.error(err))
-  .then(() => promiseDBAll(db, "SELECT * FROM book"))
-  .then((rows) =>
-    rows.forEach((row) => {
-      console.log(`${row.id} : ${row.title}`);
-    }),
-  )
+  .then((id) => {
+    if (id) {
+      console.log(id);
+    }
+    return promiseDBAll(db, "SELECT * FROM book");
+  })
   .catch((err) => console.error(err))
-  .then(() => promiseDBRun(db, "DROP TABLE books"))
+  .then((rows) => {
+    if (rows) {
+      rows.forEach((row) => {
+        console.log(`${row.id} : ${row.title}`);
+      });
+    }
+    return promiseDBRun(db, "DROP TABLE books");
+  })
   .then(() => db.close());
