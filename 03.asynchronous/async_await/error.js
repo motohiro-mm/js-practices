@@ -1,16 +1,12 @@
-import {
-  db,
-  createBooksTable,
-  addBook,
-  getBooks,
-  dropTable,
-  wrongSql,
-} from "../common_promise.js";
+import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
 
 (async () => {
-  await createBooksTable();
+  await promiseDBRun(
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    [],
+  );
   try {
-    const id = await addBook();
+    const id = await promiseDBRun("INSERT INTO books(title) VALUES(?)");
     console.log(id);
   } catch (err) {
     if (err.code === "SQLITE_CONSTRAINT") {
@@ -20,7 +16,7 @@ import {
     }
   }
   try {
-    const rows = await getBooks(wrongSql);
+    const rows = await promiseDBAll("SELECT * FROM book");
     rows.forEach((row) => {
       console.log(`${row.id} : ${row.title}`);
     });
@@ -31,6 +27,6 @@ import {
       throw err;
     }
   }
-  await dropTable();
+  await promiseDBRun("DROP TABLE books");
   db.close();
 })();
