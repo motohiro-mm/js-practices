@@ -9,7 +9,7 @@ db.run(
       "リーダブルコード",
       function () {
         console.log(this.lastID);
-        db.all("SELECT * FROM books", (err, rows) => {
+        db.all("SELECT * FROM books", (_, rows) => {
           rows.forEach((row) => {
             console.log(`${row.id} : ${row.title}`);
           });
