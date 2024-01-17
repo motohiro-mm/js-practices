@@ -3,7 +3,6 @@ import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
 promiseDBRun(
   db,
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-  [],
 )
   .then(() =>
     promiseDBRun(

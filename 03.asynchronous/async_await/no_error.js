@@ -4,7 +4,6 @@ import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
   await promiseDBRun(
     db,
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-    [],
   );
   const id = await promiseDBRun(
     db,
