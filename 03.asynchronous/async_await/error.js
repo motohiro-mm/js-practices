@@ -6,7 +6,7 @@ import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
     [],
   );
   try {
-    const id = await promiseDBRun("INSERT INTO books (title) VALUES ?)");
+    const id = await promiseDBRun("INSERT INTO books (title) VALUES(?)", null);
     console.log(id);
   } catch (err) {
     if (err.code === "SQLITE_CONSTRAINT") {

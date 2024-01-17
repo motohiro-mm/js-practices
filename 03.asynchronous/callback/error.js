@@ -4,7 +4,7 @@ const db = new sqlite3.Database(":memory:");
 db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
-    db.run("INSERT INTO books (title) VALUES (?)", function (err) {
+    db.run("INSERT INTO books (title) VALUES (?)", null, function (err) {
       err ? console.error(err) : console.log(this.lastID);
       db.all("SELECT * FROM book", (err, rows) => {
         if (err) {
