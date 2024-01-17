@@ -2,14 +2,14 @@ import sqlite3 from "sqlite3";
 
 export const db = new sqlite3.Database(":memory:");
 
-export const promiseDBRun = (sql, params) =>
+export const promiseDBRun = (db, sql, params) =>
   new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
       err ? reject(err) : resolve(this.lastID);
     });
   });
 
-export const promiseDBAll = (sql) =>
+export const promiseDBAll = (db, sql) =>
   new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => {
       err ? reject(err) : resolve(rows);
