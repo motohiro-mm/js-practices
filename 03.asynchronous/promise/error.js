@@ -1,4 +1,9 @@
-import { db, promiseDBRun, promiseDBAll } from "../common_promise.js";
+import {
+  db,
+  promiseDBRun,
+  promiseDBAll,
+  promiseDBClose,
+} from "../common_promise.js";
 
 promiseDBRun(
   db,
@@ -21,4 +26,4 @@ promiseDBRun(
     }
     return promiseDBRun(db, "DROP TABLE books");
   })
-  .then(() => db.close());
+  .then(() => promiseDBClose(db));
