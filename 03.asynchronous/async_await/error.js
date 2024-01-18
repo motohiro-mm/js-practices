@@ -5,37 +5,35 @@ import {
   promiseDBClose,
 } from "../common_promise.js";
 
-(async () => {
-  await promiseDBRun(
+await promiseDBRun(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+);
+try {
+  const id = await promiseDBRun(
     db,
-    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "INSERT INTO books (title) VALUES(?)",
+    null,
   );
-  try {
-    const id = await promiseDBRun(
-      db,
-      "INSERT INTO books (title) VALUES(?)",
-      null,
-    );
-    console.log(id);
-  } catch (err) {
-    if (err.code === "SQLITE_CONSTRAINT") {
-      console.error(err);
-    } else {
-      throw err;
-    }
+  console.log(id);
+} catch (err) {
+  if (err.code === "SQLITE_CONSTRAINT") {
+    console.error(err);
+  } else {
+    throw err;
   }
-  try {
-    const rows = await promiseDBAll(db, "SELECT * FROM book");
-    rows.forEach((row) => {
-      console.log(`${row.id} : ${row.title}`);
-    });
-  } catch (err) {
-    if (err.code === "SQLITE_ERROR") {
-      console.error(err);
-    } else {
-      throw err;
-    }
+}
+try {
+  const rows = await promiseDBAll(db, "SELECT * FROM book");
+  rows.forEach((row) => {
+    console.log(`${row.id} : ${row.title}`);
+  });
+} catch (err) {
+  if (err.code === "SQLITE_ERROR") {
+    console.error(err);
+  } else {
+    throw err;
   }
-  await promiseDBRun(db, "DROP TABLE books");
-  promiseDBClose(db);
-})();
+}
+await promiseDBRun(db, "DROP TABLE books");
+promiseDBClose(db);
