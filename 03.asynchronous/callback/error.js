@@ -5,10 +5,10 @@ db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run("INSERT INTO books (title) VALUES (?)", null, function (err) {
-      err ? console.error(err) : console.log(this.lastID);
+      err ? console.error(err.message) : console.log(this.lastID);
       db.all("SELECT * FROM book", (err, rows) => {
         if (err) {
-          console.error(err);
+          console.error(err.message);
         } else {
           rows.forEach((row) => {
             console.log(`${row.id} : ${row.title}`);
