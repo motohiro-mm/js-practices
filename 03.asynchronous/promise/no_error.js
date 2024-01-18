@@ -16,8 +16,8 @@ promiseDBRun(
       "リーダブルコード",
     ),
   )
-  .then((id) => {
-    console.log(id);
+  .then((insertStatement) => {
+    console.log(insertStatement.lastID);
     return promiseDBAll(db, "SELECT * FROM books");
   })
   .then((rows) => {

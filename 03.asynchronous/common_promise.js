@@ -8,7 +8,7 @@ export const promiseDBRun = (db, sql, params) =>
       if (err) {
         reject(err);
       } else {
-        resolve(this.lastID);
+        resolve(this);
       }
     });
   });

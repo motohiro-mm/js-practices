@@ -10,12 +10,12 @@ await promiseDBRun(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
 );
 try {
-  const id = await promiseDBRun(
+  const insertStatement = await promiseDBRun(
     db,
     "INSERT INTO books (title) VALUES (?)",
     null,
   );
-  console.log(id);
+  console.log(insertStatement.lastID);
 } catch (err) {
   if (err.code === "SQLITE_CONSTRAINT") {
     console.error(err.message);

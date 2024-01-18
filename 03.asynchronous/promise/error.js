@@ -11,9 +11,9 @@ promiseDBRun(
 )
   .then(() => promiseDBRun(db, "INSERT INTO books (title) VALUES (?)", null))
   .catch((err) => console.error(err.message))
-  .then((id) => {
-    if (id) {
-      console.log(id);
+  .then((insertStatement) => {
+    if (insertStatement) {
+      console.log(insertStatement.lastID);
     }
     return promiseDBAll(db, "SELECT * FROM book");
   })
