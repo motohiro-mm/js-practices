@@ -12,7 +12,7 @@ await promiseDBRun(
 try {
   const id = await promiseDBRun(
     db,
-    "INSERT INTO books (title) VALUES(?)",
+    "INSERT INTO books (title) VALUES (?)",
     null,
   );
   console.log(id);
