@@ -13,13 +13,17 @@ promiseDBRun(
   .then((insertStatement) => {
     console.log(insertStatement.lastID);
   })
-  .catch((err) => console.error(err.message))
+  .catch((err) => {
+    console.error(err.message);
+  })
   .then(() => promiseDBAll(db, "SELECT * FROM book"))
   .then((rows) => {
     rows.forEach((row) => {
       console.log(`${row.id} : ${row.title}`);
-    })
+    });
   })
-  .catch((err) => console.error(err.message))
+  .catch((err) => {
+    console.error(err.message);
+  })
   .then(() => promiseDBRun(db, "DROP TABLE books"))
   .then(() => promiseDBClose(db));
