@@ -25,6 +25,12 @@ export const promiseDBAll = (db, sql) =>
   });
 
 export const promiseDBClose = (db) =>
-  new Promise((resolve) => {
-    db.close(() => resolve());
+  new Promise((resolve, reject) => {
+    db.close(function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
   });

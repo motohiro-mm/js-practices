@@ -3,7 +3,7 @@ import {
   promiseDBRun,
   promiseDBAll,
   promiseDBClose,
-} from "../common_promise.js";
+} from "../database_operations.js";
 
 await promiseDBRun(
   db,
@@ -36,4 +36,4 @@ try {
   }
 }
 await promiseDBRun(db, "DROP TABLE books");
-promiseDBClose(db);
+await promiseDBClose(db);
