@@ -20,4 +20,4 @@ rows.forEach((row) => {
   console.log(`${row.id} : ${row.title}`);
 });
 await promiseDBRun(db, "DROP TABLE books");
-promiseDBClose(db);
+await promiseDBClose(db);
