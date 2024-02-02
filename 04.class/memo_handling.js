@@ -81,9 +81,7 @@ export class MemoHandling {
       },
     };
     const answer = await Enquirer.prompt(question);
-    return choiceMemos.find((memo) => {
-      return memo.id === answer.name.id;
-    });
+    return choiceMemos.find((memo) => memo.id === answer.name.id);
   }
 
   addFirstLine(memos) {

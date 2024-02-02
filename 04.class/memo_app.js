@@ -24,7 +24,7 @@ class MemoApp {
       const input = await this.input();
       await memoHandling.add(input);
     }
-    memoHandling.close();
+    await memoHandling.close();
   }
   input() {
     let lines = [];
@@ -37,7 +37,7 @@ class MemoApp {
       reader.on("line", function (line) {
         lines.push(line);
       });
-      reader.on("close", function () {
+      reader.on("close", () => {
         resolve(lines.join("\n"));
       });
     });

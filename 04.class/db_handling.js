@@ -33,7 +33,7 @@ export class DBHandling {
 
   close() {
     return new Promise((resolve, reject) => {
-      this.db.close(function (err) {
+      this.db.close((err) => {
         if (err) {
           reject(err);
         } else {
@@ -45,7 +45,7 @@ export class DBHandling {
 
   runDB(sql, ...params) {
     return new Promise((resolve, reject) => {
-      this.db.run(sql, params, function (err) {
+      this.db.run(sql, params, (err) => {
         if (err) {
           reject(err);
         } else {
