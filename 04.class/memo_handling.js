@@ -1,25 +1,25 @@
-import { MemoDBHandling } from "./memo_db_handling.js";
+import { DBHandling } from "./db_handling.js";
 
 import Enquirer from "enquirer";
 
-export class MemoAppHandling {
+export class MemoHandling {
   constructor(dbPath) {
-    this.memoDB = new MemoDBHandling(dbPath);
+    this.dbHandling = new DBHandling(dbPath);
   }
 
   async add(input) {
-    await this.memoDB.add(input);
+    await this.dbHandling.add(input);
   }
 
   async displayList() {
-    const memos = await this.memoDB.get();
+    const memos = await this.dbHandling.get();
     memos.forEach((memo) => {
       console.log(memo.text.split("\n")[0]);
     });
   }
 
   async displayDetail() {
-    const memos = await this.memoDB.get();
+    const memos = await this.dbHandling.get();
     memos.forEach((memo) => {
       memo.name = memo.text.split("\n")[0];
     });
@@ -40,7 +40,7 @@ export class MemoAppHandling {
   }
 
   async delete() {
-    const memos = await this.memoDB.get();
+    const memos = await this.dbHandling.get();
     memos.forEach((memo) => {
       memo.name = memo.text.split("\n")[0];
     });
@@ -57,10 +57,14 @@ export class MemoAppHandling {
     const deletedMemo = memos.find((memo) => {
       return memo.id === answer.name.id;
     });
-    this.memoDB.delete(deletedMemo.id);
+    this.dbHandling.delete(deletedMemo.id);
+  }
+
+  async createMemoTable() {
+    await this.dbHandling.createMemoTable();
   }
 
   async close() {
-    await this.memoDB.close();
+    await this.dbHandling.close();
   }
 }

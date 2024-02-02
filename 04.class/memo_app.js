@@ -1,22 +1,23 @@
-import { MemoAppHandling } from "./memo_app_handling.js";
+import { MemoHandling } from "./memo_handling.js";
 
 import minimist from "minimist";
 import readline from "readline";
 
 class MemoApp {
   async operate(db, argv) {
-    const memoAppHandling = new MemoAppHandling(db);
+    const memoHandling = new MemoHandling(db);
+    await memoHandling.createMemoTable();
     if (argv.l) {
-      await memoAppHandling.displayList();
+      await memoHandling.displayList();
     } else if (argv.r) {
-      await memoAppHandling.displayDetail();
+      await memoHandling.displayDetail();
     } else if (argv.d) {
-      await memoAppHandling.delete();
+      await memoHandling.delete();
     } else {
       const input = await this.input();
-      await memoAppHandling.add(input);
+      await memoHandling.add(input);
     }
-    memoAppHandling.close();
+    memoHandling.close();
   }
   input() {
     let lines = [];
