@@ -1,6 +1,5 @@
 import { DBHandling } from "./db_handling.js";
 import { NoEnteredMemoError, NoRegisteredMemoError } from "./original_error.js";
-
 import Enquirer from "enquirer";
 
 export class MemoHandling {

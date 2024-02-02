@@ -1,5 +1,4 @@
 import { MemoHandling } from "./memo_handling.js";
-
 import minimist from "minimist";
 import readline from "readline";
 
@@ -7,7 +6,15 @@ class MemoApp {
   async operate(db, argv) {
     const memoHandling = new MemoHandling(db);
     await memoHandling.createMemoTable();
-    if (argv.l) {
+    const options = Object.keys(argv);
+    if (options.length > 2) {
+      console.error("Please choose one option: l, r, or d.");
+    } else if (
+      options.length === 2 &&
+      !options.some((option) => ["l", "r", "d"].includes(option))
+    ) {
+      console.error("The only options that can be used are l, r, and d.");
+    } else if (argv.l) {
       await memoHandling.displayList();
     } else if (argv.r) {
       await memoHandling.displayDetail();
