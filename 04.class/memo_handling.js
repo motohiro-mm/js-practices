@@ -63,12 +63,12 @@ export class MemoHandling {
     }
   }
 
-  createMemoTable() {
-    this.dbHandling.createMemoTable();
+  async createMemoTable() {
+    await this.dbHandling.createMemoTable();
   }
 
-  close() {
-    this.dbHandling.close();
+  async close() {
+    await this.dbHandling.close();
   }
 
   async pickUp(choiceMemos, action) {
