@@ -1,5 +1,8 @@
 import { DBHandling } from "./db_handling.js";
-import { NoEnteredMemoError, NoRegisteredMemoError } from "./original_error.js";
+import {
+  NotEnteredMemoError,
+  NotRegisteredMemoError,
+} from "./original_error.js";
 import Enquirer from "enquirer";
 
 export class MemoHandling {
@@ -8,58 +11,38 @@ export class MemoHandling {
   }
 
   async add(input) {
-    try {
-      if (!input) {
-        throw new NoEnteredMemoError();
-      }
-      await this.dbHandling.add(input);
-    } catch (error) {
-      if (error instanceof NoEnteredMemoError) {
-        console.error(error.message);
-      } else {
-        throw error;
-      }
+    if (!input) {
+      throw new NotEnteredMemoError();
     }
+    await this.dbHandling.add(input);
   }
 
   async displayList() {
-    try {
-      const memos = await this.dbHandling.get();
-      if (memos.length === 0) {
-        throw new NoRegisteredMemoError();
-      }
-      memos.forEach((memo) => {
-        console.log(memo.text.split("\n")[0]);
-      });
-    } catch (error) {
-      this.checkNoRegisteredMemoError(error);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
+    memos.forEach((memo) => {
+      console.log(memo.text.split("\n")[0]);
+    });
   }
 
   async displayDetail() {
-    try {
-      const memos = await this.dbHandling.get();
-      if (memos.length === 0) {
-        throw new NoRegisteredMemoError();
-      }
-      const memoDetail = await this.pickUp(this.addFirstLine(memos), "see");
-      console.log(memoDetail.text);
-    } catch (error) {
-      this.checkNoRegisteredMemoError(error);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
+    const memoDetail = await this.pickUp(this.addFirstLine(memos), "see");
+    console.log(memoDetail.text);
   }
 
   async delete() {
-    try {
-      const memos = await this.dbHandling.get();
-      if (memos.length === 0) {
-        throw new NoRegisteredMemoError();
-      }
-      const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
-      this.dbHandling.delete(deletedMemo.id);
-    } catch (error) {
-      this.checkNoRegisteredMemoError(error);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
+    const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
+    this.dbHandling.delete(deletedMemo.id);
   }
 
   async createMemoTable() {
@@ -89,13 +72,5 @@ export class MemoHandling {
       memo.name = memo.text.split("\n")[0];
     });
     return memos;
-  }
-
-  checkNoRegisteredMemoError(error) {
-    if (error instanceof NoRegisteredMemoError) {
-      console.error(error.message);
-    } else {
-      throw error;
-    }
   }
 }

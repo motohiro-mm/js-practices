@@ -1,30 +1,39 @@
 import { MemoHandling } from "./memo_handling.js";
 import minimist from "minimist";
 import readline from "readline";
+import {
+  TooManyOptionsError,
+  NotAvailableOptionsError,
+} from "./original_error.js";
 
 class MemoApp {
   async operate(db, argv) {
     const memoHandling = new MemoHandling(db);
     await memoHandling.createMemoTable();
     const options = Object.keys(argv);
-    if (options.length > 2) {
-      console.error("Please choose one option: l, r, or d.");
-    } else if (
-      options.length === 2 &&
-      !options.some((option) => ["l", "r", "d"].includes(option))
-    ) {
-      console.error("The only options that can be used are l, r, and d.");
-    } else if (argv.l) {
-      await memoHandling.displayList();
-    } else if (argv.r) {
-      await memoHandling.displayDetail();
-    } else if (argv.d) {
-      await memoHandling.delete();
-    } else {
-      const input = await this.input();
-      await memoHandling.add(input);
+    try {
+      if (options.length > 2) {
+        throw new TooManyOptionsError();
+      } else if (
+        options.length === 2 &&
+        !options.some((option) => ["l", "r", "d"].includes(option))
+      ) {
+        throw new NotAvailableOptionsError();
+      } else if (argv.l) {
+        await memoHandling.displayList();
+      } else if (argv.r) {
+        await memoHandling.displayDetail();
+      } else if (argv.d) {
+        await memoHandling.delete();
+      } else {
+        const input = await this.input();
+        await memoHandling.add(input);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      await memoHandling.close();
     }
-    await memoHandling.close();
   }
   input() {
     let lines = [];
