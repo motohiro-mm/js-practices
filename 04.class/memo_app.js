@@ -36,7 +36,7 @@ class MemoApp {
     }
   }
   input() {
-    let lines = [];
+    const lines = [];
     const reader = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
