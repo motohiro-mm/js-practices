@@ -1,21 +1,22 @@
-import { DBHandling } from "./db_handling.js";
+import { Database } from "./database.js";
 import minimist from "minimist";
 import readline from "readline";
 import Enquirer from "enquirer";
 import {
-  NotEnteredMemoError,
-  NotRegisteredMemoError,
+  NotEnteredDataError,
+  NotRegisteredDataError,
   TooManyOptionsError,
   NotAvailableOptionsError,
 } from "./original_error.js";
 
-class MemoApp {
-  constructor(dbPath) {
-    this.dbHandling = new DBHandling(dbPath);
+class CLIApp {
+  constructor(dbInfo, dataName) {
+    this.db = new Database(dbInfo);
+    this.dataName = dataName;
   }
 
   async operate(argv) {
-    await this.dbHandling.createMemoTable();
+    await this.db.createTable();
     const options = Object.keys(argv);
     try {
       if (options.length > 2) {
@@ -38,57 +39,62 @@ class MemoApp {
     } catch (error) {
       console.error(error.message);
     } finally {
-      await this.dbHandling.close();
+      await this.db.close();
     }
   }
 
   async displayList() {
-    const memos = await this.dbHandling.get();
-    if (memos.length === 0) {
-      throw new NotRegisteredMemoError();
+    const registeredData = await this.db.get();
+    if (registeredData.length === 0) {
+      throw new NotRegisteredDataError(this.dataName);
     }
-    memos.forEach((memo) => {
-      console.log(memo.text.split("\n")[0]);
+    registeredData.forEach((data) => {
+      console.log(data.text.split("\n")[0]);
     });
   }
 
   async displayDetail() {
-    const memos = await this.dbHandling.get();
-    if (memos.length === 0) {
-      throw new NotRegisteredMemoError();
+    const registeredData = await this.db.get();
+    if (registeredData.length === 0) {
+      throw new NotRegisteredDataError(this.dataName);
     }
-    const memoDetail = await this.pickUp(this.addFirstLine(memos), "see");
-    console.log(memoDetail.text);
+    const detail = await this.pickUp(this.addFirstLine(registeredData), "see");
+    console.log(detail.text);
   }
 
   async delete() {
-    const memos = await this.dbHandling.get();
-    if (memos.length === 0) {
-      throw new NotRegisteredMemoError();
+    const registeredData = await this.db.get();
+    if (registeredData.length === 0) {
+      throw new NotRegisteredDataError(this.dataName);
     }
-    const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
-    this.dbHandling.delete(deletedMemo.id);
+    const deletedData = await this.pickUp(
+      this.addFirstLine(registeredData),
+      "delete",
+    );
+    this.db.delete(deletedData.id);
   }
 
-  async pickUp(choiceMemos, action) {
+  async pickUp(choices, action) {
     const question = {
       type: "select",
       name: "name",
       message: `Choose a note you want to ${action}:`,
-      choices: choiceMemos,
+      choices: choices,
       result(value) {
         return this.choices.find((choice) => choice.name === value);
       },
     };
     const answer = await Enquirer.prompt(question);
-    return choiceMemos.find((memo) => memo.id === answer.name.id);
+    return choices.find(
+      (registeredData) => registeredData.id === answer.name.id,
+    );
   }
 
-  addFirstLine(memos) {
-    memos.forEach((memo) => {
-      memo.name = memo.text.split("\n")[0];
+  addFirstLine(registeredData) {
+    registeredData.forEach((rd) => {
+      rd.name = rd.text.split("\n")[0];
     });
-    return memos;
+    return registeredData;
   }
 
   input() {
@@ -110,14 +116,20 @@ class MemoApp {
 
   async add(input) {
     if (!input) {
-      throw new NotEnteredMemoError();
+      throw new NotEnteredDataError(this.dataName);
     }
-    await this.dbHandling.add(input);
+    await this.db.add(input);
   }
 }
 
-const db = "./memo_db.sqlite3";
+const dbInfo = {
+  dbPath: "./memo_db.sqlite3",
+  tableName: "memos",
+  tablePlan: "id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL",
+  specifiedColumn: "text",
+};
+
 const argv = minimist(process.argv.slice(2));
 
-const memoApp = new MemoApp(db);
+const memoApp = new CLIApp(dbInfo, "memo");
 memoApp.operate(argv);
