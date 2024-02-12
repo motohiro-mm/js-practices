@@ -1,4 +1,4 @@
-import { DBHandling } from "./db_handling.js";
+import { MemoDB } from "./db_handling.js";
 import minimist from "minimist";
 import readline from "readline";
 import Enquirer from "enquirer";
@@ -11,11 +11,11 @@ import {
 
 class MemoApp {
   constructor(dbPath) {
-    this.dbHandling = new DBHandling(dbPath);
+    this.memo_db = new MemoDB(dbPath);
   }
 
   async operate(argv) {
-    await this.dbHandling.createMemoTable();
+    await this.memo_db.createMemoTable();
     const options = Object.keys(argv);
     try {
       if (options.length > 2) {
@@ -38,12 +38,12 @@ class MemoApp {
     } catch (error) {
       console.error(error.message);
     } finally {
-      await this.dbHandling.close();
+      await this.memo_db.close();
     }
   }
 
   async displayList() {
-    const memos = await this.dbHandling.get();
+    const memos = await this.memo_db.get();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
@@ -53,7 +53,7 @@ class MemoApp {
   }
 
   async displayDetail() {
-    const memos = await this.dbHandling.get();
+    const memos = await this.memo_db.get();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
@@ -62,12 +62,12 @@ class MemoApp {
   }
 
   async delete() {
-    const memos = await this.dbHandling.get();
+    const memos = await this.memo_db.get();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
     const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
-    this.dbHandling.delete(deletedMemo.id);
+    this.memo_db.delete(deletedMemo.id);
   }
 
   async pickUp(choiceMemos, action) {
@@ -112,7 +112,7 @@ class MemoApp {
     if (!input) {
       throw new NotEnteredMemoError();
     }
-    await this.dbHandling.add(input);
+    await this.memo_db.add(input);
   }
 }
 

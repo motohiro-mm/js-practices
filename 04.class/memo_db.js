@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-export class DBHandling {
+export class MemoDB {
   constructor(dbPath) {
     this.db = new sqlite3.Database(dbPath);
   }
