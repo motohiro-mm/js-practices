@@ -1,4 +1,4 @@
-import { MemoDB } from "./db_handling.js";
+import { MemoDB } from "./memo_db.js";
 import minimist from "minimist";
 import readline from "readline";
 import Enquirer from "enquirer";
