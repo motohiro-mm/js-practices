@@ -1,16 +1,17 @@
-export class NotEnteredDataError extends Error {
-  constructor(dataName) {
+export class NotEnteredMemoError extends Error {
+  constructor() {
     super();
-    this.name = "NotEnteredDataError";
-    this.message = `No ${dataName}s have been entered.\nPlease enter the ${dataName} you want to register.`;
+    this.name = "NotEnteredMemoError";
+    this.message =
+      "No memos have been entered.\nPlease enter the memo you want to register.";
   }
 }
 
-export class NotRegisteredDataError extends Error {
-  constructor(dataName) {
+export class NotRegisteredMemoError extends Error {
+  constructor() {
     super();
-    this.name = "NotRegisteredDataError";
-    this.message = `No ${dataName}s have been created yet.\nPlease add a ${dataName} first.`;
+    this.name = "NotRegisteredMemoError";
+    this.message = "No memos have been created yet.\nPlease add a memo first.";
   }
 }
 export class TooManyOptionsError extends Error {

@@ -1,22 +1,21 @@
-import { Database } from "./database.js";
+import { DBHandling } from "./db_handling.js";
 import minimist from "minimist";
 import readline from "readline";
 import Enquirer from "enquirer";
 import {
-  NotEnteredDataError,
-  NotRegisteredDataError,
+  NotEnteredMemoError,
+  NotRegisteredMemoError,
   TooManyOptionsError,
   NotAvailableOptionsError,
 } from "./original_error.js";
 
-class CLIApp {
-  constructor(dbInfo, dataName) {
-    this.db = new Database(dbInfo);
-    this.dataName = dataName;
+class MemoApp {
+  constructor(dbPath) {
+    this.dbHandling = new DBHandling(dbPath);
   }
 
   async operate(argv) {
-    await this.db.createTable();
+    await this.dbHandling.createMemoTable();
     const options = Object.keys(argv);
     try {
       if (options.length > 2) {
@@ -39,62 +38,57 @@ class CLIApp {
     } catch (error) {
       console.error(error.message);
     } finally {
-      await this.db.close();
+      await this.dbHandling.close();
     }
   }
 
   async displayList() {
-    const registeredData = await this.db.get();
-    if (registeredData.length === 0) {
-      throw new NotRegisteredDataError(this.dataName);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
-    registeredData.forEach((data) => {
-      console.log(data.text.split("\n")[0]);
+    memos.forEach((memo) => {
+      console.log(memo.text.split("\n")[0]);
     });
   }
 
   async displayDetail() {
-    const registeredData = await this.db.get();
-    if (registeredData.length === 0) {
-      throw new NotRegisteredDataError(this.dataName);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
-    const detail = await this.pickUp(this.addFirstLine(registeredData), "see");
-    console.log(detail.text);
+    const memoDetail = await this.pickUp(this.addFirstLine(memos), "see");
+    console.log(memoDetail.text);
   }
 
   async delete() {
-    const registeredData = await this.db.get();
-    if (registeredData.length === 0) {
-      throw new NotRegisteredDataError(this.dataName);
+    const memos = await this.dbHandling.get();
+    if (memos.length === 0) {
+      throw new NotRegisteredMemoError();
     }
-    const deletedData = await this.pickUp(
-      this.addFirstLine(registeredData),
-      "delete",
-    );
-    this.db.delete(deletedData.id);
+    const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
+    this.dbHandling.delete(deletedMemo.id);
   }
 
-  async pickUp(choices, action) {
+  async pickUp(choiceMemos, action) {
     const question = {
       type: "select",
       name: "name",
       message: `Choose a note you want to ${action}:`,
-      choices: choices,
+      choices: choiceMemos,
       result(value) {
         return this.choices.find((choice) => choice.name === value);
       },
     };
     const answer = await Enquirer.prompt(question);
-    return choices.find(
-      (registeredData) => registeredData.id === answer.name.id,
-    );
+    return choiceMemos.find((memo) => memo.id === answer.name.id);
   }
 
-  addFirstLine(registeredData) {
-    registeredData.forEach((rd) => {
-      rd.name = rd.text.split("\n")[0];
+  addFirstLine(memos) {
+    memos.forEach((memo) => {
+      memo.name = memo.text.split("\n")[0];
     });
-    return registeredData;
+    return memos;
   }
 
   input() {
@@ -116,20 +110,14 @@ class CLIApp {
 
   async add(input) {
     if (!input) {
-      throw new NotEnteredDataError(this.dataName);
+      throw new NotEnteredMemoError();
     }
-    await this.db.add(input);
+    await this.dbHandling.add(input);
   }
 }
 
-const dbInfo = {
-  dbPath: "./memo_db.sqlite3",
-  tableName: "memos",
-  tablePlan: "id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL",
-  specifiedColumn: "text",
-};
-
+const db = "./memo_db.sqlite3";
 const argv = minimist(process.argv.slice(2));
 
-const memoApp = new CLIApp(dbInfo, "memo");
+const memoApp = new MemoApp(db);
 memoApp.operate(argv);
