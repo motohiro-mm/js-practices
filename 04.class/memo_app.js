@@ -43,7 +43,7 @@ class MemoApp {
   }
 
   async displayList() {
-    const memos = await this.memo_db.get();
+    const memos = await this.memo_db.get_all();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
@@ -53,35 +53,39 @@ class MemoApp {
   }
 
   async displayDetail() {
-    const memos = await this.memo_db.get();
+    const memos = await this.memo_db.get_all();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
-    const memoDetail = await this.pickUp(this.addFirstLine(memos), "see");
-    console.log(memoDetail.text);
+    const selectMemoID = await this.pickUpID(this.addFirstLine(memos), "see");
+    const selectedText = await this.memo_db.fetch_text(selectMemoID);
+    console.log(selectedText);
   }
 
   async delete() {
-    const memos = await this.memo_db.get();
+    const memos = await this.memo_db.get_all();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
-    const deletedMemo = await this.pickUp(this.addFirstLine(memos), "delete");
-    this.memo_db.delete(deletedMemo.id);
+    const deletedMemoID = await this.pickUpID(
+      this.addFirstLine(memos),
+      "delete",
+    );
+    this.memo_db.delete(deletedMemoID);
   }
 
-  async pickUp(choiceMemos, action) {
+  async pickUpID(choiceMemos, action) {
     const question = {
       type: "select",
-      name: "name",
+      name: "id",
       message: `Choose a note you want to ${action}:`,
       choices: choiceMemos,
-      result(value) {
-        return this.choices.find((choice) => choice.name === value);
+      result() {
+        return this.focused.id;
       },
     };
     const answer = await Enquirer.prompt(question);
-    return choiceMemos.find((memo) => memo.id === answer.name.id);
+    return answer.id;
   }
 
   addFirstLine(memos) {

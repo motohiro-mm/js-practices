@@ -19,13 +19,25 @@ export class MemoDB {
     return this.runDB("DELETE FROM memos WHERE ID = (?)", id);
   }
 
-  get() {
+  get_all() {
     return new Promise((resolve, reject) => {
       this.db.all("SELECT * FROM memos ORDER BY id", (err, rows) => {
         if (err) {
           reject(err);
         } else {
           resolve(rows);
+        }
+      });
+    });
+  }
+
+  fetch_text(id) {
+    return new Promise((resolve, reject) => {
+      this.db.get("SELECT text FROM memos WHERE ID = (?)", id, (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row.text);
         }
       });
     });
