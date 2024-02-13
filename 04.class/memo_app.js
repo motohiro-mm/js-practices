@@ -11,11 +11,11 @@ import {
 
 class MemoApp {
   constructor(dbPath) {
-    this.memo_db = new MemoDB(dbPath);
+    this.memoDB = new MemoDB(dbPath);
   }
 
   async operate(argv) {
-    await this.memo_db.createMemoTable();
+    await this.memoDB.createMemoTable();
     const options = Object.keys(argv);
     try {
       if (options.length > 2) {
@@ -38,12 +38,12 @@ class MemoApp {
     } catch (error) {
       console.error(error.message);
     } finally {
-      await this.memo_db.close();
+      await this.memoDB.close();
     }
   }
 
   async displayList() {
-    const memos = await this.memo_db.get_all();
+    const memos = await this.memoDB.getAll();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
@@ -53,17 +53,17 @@ class MemoApp {
   }
 
   async displayDetail() {
-    const memos = await this.memo_db.get_all();
+    const memos = await this.memoDB.getAll();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
     const selectMemoID = await this.pickUpID(this.addFirstLine(memos), "see");
-    const selectedText = await this.memo_db.fetch_text(selectMemoID);
+    const selectedText = await this.memoDB.fetchText(selectMemoID);
     console.log(selectedText);
   }
 
   async delete() {
-    const memos = await this.memo_db.get_all();
+    const memos = await this.memoDB.getAll();
     if (memos.length === 0) {
       throw new NotRegisteredMemoError();
     }
@@ -71,7 +71,7 @@ class MemoApp {
       this.addFirstLine(memos),
       "delete",
     );
-    this.memo_db.delete(deletedMemoID);
+    this.memoDB.delete(deletedMemoID);
   }
 
   async pickUpID(choiceMemos, action) {
@@ -116,7 +116,7 @@ class MemoApp {
     if (!input) {
       throw new NotEnteredMemoError();
     }
-    await this.memo_db.add(input);
+    await this.memoDB.add(input);
   }
 }
 
